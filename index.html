@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AB's Notes - Circuits 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <!-- KaTeX for LaTeX rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        main {
+            scroll-behavior: smooth;
+        }
+        section {
+            background-color: #fff;
+            border-radius: 8px;
+            margin-top: 2rem;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+        h2 {
+             margin: 0 0 1rem 0;
+             padding-bottom: 0.5rem;
+             border-bottom: 2px solid #e5e7eb;
+             font-size: 1.5rem;
+        }
+        .prose h3 {
+            margin-top: 1.5em;
+            margin-bottom: 1em;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .prose p, .prose ul, .prose li, .prose ol {
+            line-height: 1.75;
+        }
+        .key-formulas {
+            background-color: #eff6ff; /* Light blue background */
+            border: 1px solid #bfdbfe; /* Blue border */
+            border-left: 4px solid #3b82f6; /* Darker blue left border */
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+        }
+        .example, .video-container, .interactive-widget {
+            background-color: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 8px;
+            border-left: 4px solid #6366f1;
+        }
+        .example-title, .video-title, .widget-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+        .katex-display { display: block; margin: 1em 0; text-align: center; }
+        .sidebar { transition: transform 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="w-64 bg-white shadow-md flex-shrink-0 fixed lg:relative h-full z-20 transform -translate-x-full lg:translate-x-0 sidebar">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-gray-900">AB's Notes</h1>
+                <p class="text-sm text-gray-600">Circuits 1</p>
+            </div>
+            <nav class="mt-4 px-4">
+                 <ul>
+                    <li class="mb-2"><a href="#unit1" class="nav-link font-semibold text-blue-600 block p-2 rounded hover:bg-gray-200">1. Terminology & Quantities</a></li>
+                    <li class="mb-2"><a href="#unit2" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">2. Ohm's & Kirchhoff's Laws</a></li>
+                    <li class="mb-2"><a href="#unit3" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">3. Series/Parallel Circuits</a></li>
+                    <li class="mb-2"><a href="#unit4" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">4. Nodal & Mesh Analysis</a></li>
+                    <li class="mb-2"><a href="#unit5" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">5. Superposition</a></li>
+                    <li class="mb-2"><a href="#unit6" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">6. Thévenin & Norton</a></li>
+                    <li class="mb-2"><a href="#unit7" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">7. First-Order Circuits</a></li>
+                    <li class="mb-2"><a href="#unit8" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">8. Sinusoidal Analysis</a></li>
+                    <li class="mb-2"><a href="#unit9" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">9. AC Power & Impedance</a></li>
+                    <li class="mb-2"><a href="#unit10" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">10. Op-Amps (Abstraction)</a></li>
+                    <li class="mb-2"><a href="#unit11" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">11. Op-Amp Circuits</a></li>
+                    <li class="mb-2"><a href="#unit12" class="nav-link text-gray-700 hover:font-semibold block p-2 rounded hover:bg-gray-200">12. Frequency Response</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="main-content" class="flex-1 overflow-y-auto">
+             <!-- Mobile Header -->
+            <div class="lg:hidden p-4 bg-white shadow-md sticky top-0 z-10 flex justify-between items-center">
+                <button id="menu-toggle" class="text-gray-800 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <h1 class="text-xl font-bold text-gray-900">AB's Notes</h1>
+            </div>
+
+            <div class="p-4 md:p-8">
+            <div class="prose max-w-4xl mx-auto">
+                <p>This course is organized into units covering core topics in introductory circuit analysis. For each unit, a brief overview is provided along with a recommended MIT lecture video and example problems with step-by-step solutions.</p>
+                
+                <!-- Unit 1 -->
+                <section id="unit1">
+                    <h2>Unit 1: Circuit Terminology and Basic Quantities</h2>
+                    <div class="key-formulas">
+                        <h4 class="font-semibold text-lg">Key Formulas</h4>
+                        <ul>
+                            <li>$I = \frac{dQ}{dt}$
+                                <ul class="list-none pl-4"><li>- $I$: Current (Amperes, A) is the rate of flow of charge.</li><li>- $Q$: Charge (Coulombs, C)</li></ul>
+                            </li>
+                             <li>$P = VI$
+                                <ul class="list-none pl-4">
+                                    <li>- $P$: Power (Watts, W)</li>
+                                    <li>- $V$: Voltage (Volts, V)</li>
+                                    <li>- $I$: Current (Amperes, A)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <h3>Topic Description</h3>
+                    <p>This unit introduces the fundamental concepts and terminology used in circuit analysis. Key electrical quantities such as charge, current, voltage, and power are defined, and the lumped circuit abstraction is explained. Students learn what constitutes a node, branch, and loop in a circuit, as well as the notion of a reference ground node. The passive sign convention is discussed to determine whether an element is absorbing or delivering power.</p>
+                    <div class="video-container">
+                        <p class="video-title">Recommended MIT Lecture: Introduction and Lumped Abstraction</p>
+                        <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/AfQxyVuLeCs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="example">
+                        <p class="example-title">Example 1</p>
+                        <p>A constant current of $I = 2~\text{A}$ flows through a wire. How much electric charge passes through a cross-section of the wire in $t = 3~\text{s}$? Also, if the wire connects a $5~\text{V}$ battery to a resistor, what is the power delivered to the resistor?</p>
+                        <p><strong>Solution:</strong></p>
+                        <p><b>Step 1: Charge calculation.</b> Current $I$ is the rate of charge flow ($I = Q/t$). Solving for charge $Q$ gives $Q = I \cdot t$. Plugging in values: $Q = 2~\text{A} \times 3~\text{s} = 6~\text{C}$.</p>
+                        <p><b>Step 2: Power calculation.</b> The power $P$ delivered to an element is $P = V \times I$. The resistor has $5~\text{V}$ across it and carries $2~\text{A}$. Thus $P = 5~\text{V} \times 2~\text{A} = 10~\text{W}$.</p>
+                    </div>
+                </section>
+                
+                <!-- Unit 2 -->
+                <section id="unit2">
+                    <h2>Unit 2: Ohm’s Law and Kirchhoff’s Laws</h2>
+                     <div class="key-formulas">
+                        <h4 class="font-semibold text-lg">Key Formulas</h4>
+                        <ul>
+                            <li>$V = IR$
+                                <ul class="list-none pl-4"><li>- Ohm's Law.</li></ul>
+                            </li>
+                             <li>$\sum I_{\text{in}} = \sum I_{\text{out}}$
+                                <ul class="list-none pl-4">
+                                    <li>- Kirchhoff’s Current Law (KCL): The sum of currents entering a node equals the sum of currents leaving.</li>
+                                </ul>
+                            </li>
+                             <li>$\sum V_{\text{rises}} = \sum V_{\text{drops}}$
+                                <ul class="list-none pl-4">
+                                    <li>- Kirchhoff’s Voltage Law (KVL): The sum of voltage rises equals the sum of voltage drops around any closed loop.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <h3>Topic Description</h3>
+                    <p>This unit covers the fundamental laws governing currents and voltages in circuits. Ohm’s Law ($V = I R$), Kirchhoff’s Current Law (KCL), and Kirchhoff’s Voltage Law (KVL) are introduced. Using these laws allows for the analysis of simple circuits.</p>
+                    <div class="video-container">
+                        <p class="video-title">Recommended MIT Lecture: Basic Circuit Analysis Method – KVL and KCL</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/2vHGYdepKLw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="interactive-widget">
+                        <p class="widget-title">Interactive Ohm's Law Simulator</p>
+                        <div class="grid md:grid-cols-2 gap-4 items-center">
+                            <div>
+                                <label for="voltage" class="block text-sm font-medium">Voltage (V): <span id="voltVal">12</span> V</label>
+                                <input type="range" id="voltage" min="1" max="50" value="12" class="w-full">
+                                <label for="resistance" class="block text-sm font-medium mt-4">Resistance (R): <span id="resVal">100</span> Ω</label>
+                                <input type="range" id="resistance" min="10" max="1000" value="100" class="w-full">
+                            </div>
+                            <div class="bg-gray-100 p-4 rounded-lg text-center">
+                                <p class="text-lg font-medium">Current (I)</p>
+                                <p class="text-3xl font-bold text-indigo-600" id="currentDisplay">120.0 mA</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="example">
+                        <p class="example-title">Example 1</p>
+                         <p>A 12 V battery is connected in series with two resistors, $R_1 = 3~\Omega$ and $R_2 = 2~\Omega$. Find the current and the voltage drop across each resistor.</p>
+                         <p><strong>Solution:</strong></p>
+                         <p><b>Step 1: Total resistance and current.</b> $R_{\text{eq}} = 3~\Omega + 2~\Omega = 5~\Omega$. By Ohm’s law, $I = \frac{12~\text{V}}{5~\Omega} = 2.4~\text{A}$.</p>
+                         <p><b>Step 2: Voltage drops.</b> $V_1 = I R_1 = 2.4~\text{A} \times 3~\Omega = 7.2~\text{V}$, and $V_2 = I R_2 = 2.4~\text{A} \times 2~\Omega = 4.8~\text{V}$.</p>
+                    </div>
+                </section>
+
+                <!-- Unit 3 -->
+                <section id="unit3">
+                    <h2>Unit 3: Series and Parallel Resistive Circuits</h2>
+                     <div class="key-formulas">
+                        <h4 class="font-semibold text-lg">Key Formulas</h4>
+                        <ul>
+                            <li>$R_{\text{eq, series}} = R_1 + R_2 + \cdots$</li>
+                             <li>$\frac{1}{R_{\text{eq, parallel}}} = \frac{1}{R_1} + \frac{1}{R_2} + \cdots$</li>
+                             <li>$V_x = V_s \frac{R_x}{R_{\text{total}}}$ (Voltage Divider)</li>
+                        </ul>
+                    </div>
+                    <h3>Topic Description</h3>
+                    <p>This unit teaches simplification of circuits by identifying series and parallel resistor combinations. Series resistors add directly, while parallel resistors add as reciprocals. The voltage divider and current divider rules are introduced as convenient shortcuts.</p>
+                    <div class="video-container">
+                        <p class="video-title">Recommended MIT Lecture: Basic Circuit Analysis (cont.)</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/2vHGYdepKLw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="interactive-widget">
+                        <p class="widget-title">Interactive Voltage Divider</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                            <div>
+                                <label class="block text-sm font-medium">Source Voltage (Vs): <span id="vsVal">20</span> V</label>
+                                <input type="range" id="vs" min="1" max="50" value="20" class="w-full">
+                                <label class="block text-sm font-medium mt-4">R1: <span id="r1Val">2</span> kΩ</label>
+                                <input type="range" id="r1_div" min="1" max="10" value="2" class="w-full">
+                                <label class="block text-sm font-medium mt-4">R2: <span id="r2Val">6</span> kΩ</label>
+                                <input type="range" id="r2_div" min="1" max="10" value="6" class="w-full">
+                            </div>
+                            <div class="bg-gray-100 p-4 rounded-lg text-center">
+                                <p class="text-lg font-medium">Voltage across R2 ($V_{R2}$)</p>
+                                <p class="text-3xl font-bold text-indigo-600" id="vr2Display">15.0 V</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Unit 4 -->
+                <section id="unit4">
+                    <h2>Unit 4: Nodal and Mesh Analysis</h2>
+                    <h3>Topic Description</h3>
+                    <p>This unit formalizes two powerful systematic methods for circuit analysis: nodal analysis (using KCL) and mesh analysis (using KVL). Nodal analysis solves for unknown node voltages. Mesh analysis solves for unknown loop currents. Both methods transform a complex circuit problem into a system of linear equations.</p>
+                    <div class="video-container">
+                         <p class="video-title">Recommended MIT Recitation: Nodal/Mesh Analysis</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/dAZ-i9MsbRM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </section>
+
+                <!-- Unit 5 -->
+                <section id="unit5">
+                    <h2>Unit 5: Linearity and Superposition</h2>
+                     <h3>Topic Description</h3>
+                     <p>The superposition principle states that in any linear circuit with multiple independent sources, we can calculate the effect of each source separately (turning off all other sources), then sum the results. To turn off a voltage source, replace it with a short circuit. To turn off a current source, replace it with an open circuit.</p>
+                    <div class="video-container">
+                         <p class="video-title">Recommended MIT Lecture: Superposition, Thévenin and Norton (Part 1)</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/RsJ1eg7XNVs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </section>
+
+                <!-- Unit 6 -->
+                <section id="unit6">
+                    <h2>Unit 6: Thévenin and Norton Theorems</h2>
+                    <div class="key-formulas">
+                        <h4 class="font-semibold text-lg">Key Formulas</h4>
+                         <ul>
+                             <li>$V_{th} = V_{oc}$ (Thévenin Voltage is open-circuit voltage)</li>
+                             <li>$I_{no} = I_{sc}$ (Norton Current is short-circuit current)</li>
+                             <li>$R_{th} = R_{no} = V_{th} / I_{no}$ (Equivalent Resistance)</li>
+                        </ul>
+                    </div>
+                    <h3>Topic Description</h3>
+                    <p>Thévenin’s Theorem states that any linear two-terminal network can be replaced by an equivalent circuit of a single voltage source $V_{th}$ in series with a resistor $R_{th}$. Norton’s Theorem provides an equivalent circuit of a single current source $I_{no}$ in parallel with a resistor $R_{no}$. These theorems are powerful for simplifying circuit analysis.</p>
+                     <div class="video-container">
+                         <p class="video-title">Recommended MIT Lecture: Superposition, Thévenin and Norton (Part 2)</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/RsJ1eg7XNVs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </section>
+                
+                <!-- Unit 7 -->
+                <section id="unit7">
+                    <h2>Unit 7: First-Order (RC & RL) Circuits</h2>
+                     <div class="key-formulas">
+                        <h4 class="font-semibold text-lg">Key Formulas</h4>
+                         <ul>
+                            <li>$\tau = RC$ (Time constant for RC circuits)</li>
+                             <li>$v_C(t) = V_f + (V_i - V_f)e^{-t/\tau}$ (Capacitor voltage response)</li>
+                        </ul>
+                    </div>
+                    <h3>Topic Description</h3>
+                    <p>This unit introduces circuits containing energy storage elements (capacitors and inductors), leading to time-varying behavior described by differential equations. We focus on first-order RC (resistor-capacitor) and RL (resistor-inductor) circuits. The concept of the time constant ($\tau$) is introduced, which characterizes the rate at which these circuits charge or discharge.</p>
+                    <div class="video-container">
+                         <p class="video-title">Recommended MIT Lecture: Capacitors and First-Order Systems</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/COdQmA9g9S8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                    <div class="interactive-widget">
+                        <p class="widget-title">Interactive RC Circuit Simulator</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium">Resistance (R): <span id="rc_r_val">10</span> kΩ</label>
+                                <input type="range" id="rc_r" min="1" max="100" value="10" class="w-full">
+                                <label class="block text-sm font-medium mt-4">Capacitance (C): <span id="rc_c_val">100</span> μF</label>
+                                <input type="range" id="rc_c" min="10" max="1000" value="100" class="w-full">
+                                <p class="mt-4">Time Constant ($\tau$): <strong id="rc_tau">1.00</strong> s</p>
+                                <button id="startRC" class="mt-4 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700">Charge Capacitor</button>
+                            </div>
+                             <div class="bg-white p-2 rounded-lg border">
+                                <canvas id="rcCanvas" width="400" height="200"></canvas>
+                             </div>
+                        </div>
+                    </div>
+                </section>
+                
+                 <!-- Units 8-12 -->
+                <section id="unit8">
+                    <h2>Unit 8: Sinusoidal Steady-State Analysis</h2>
+                    <h3>Topic Description</h3>
+                    <p>This unit introduces methods for analyzing circuits driven by sinusoidal (AC) sources. We explore concepts like phase and frequency, and the use of phasors to represent sinusoidal voltages and currents, which simplifies analysis by converting differential equations into algebraic equations in the frequency domain.</p>
+                     <div class="video-container">
+                         <p class="video-title">Recommended MIT Lecture: Sinusoidal Steady State</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/3GdMaDzIUeQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </section>
+                <section id="unit9">
+                    <h2>Unit 9: AC Power & Impedance</h2>
+                    <h3>Topic Description</h3>
+                    <p>We extend AC analysis by introducing impedance ($Z$), the complex generalization of resistance that applies to capacitors and inductors. We cover concepts of AC power, including average power, reactive power, and the power factor, which are crucial for understanding energy efficiency in AC systems.</p>
+                     <div class="video-container">
+                         <p class="video-title">Recommended MIT Lecture: The Impedance Model</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/Km9YIdkc2Oo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </section>
+                <section id="unit10">
+                    <h2>Unit 10: Operational Amplifiers (Abstraction)</h2>
+                    <h3>Topic Description</h3>
+                    <p>This unit introduces the operational amplifier (op-amp) as an essential building block in analog electronics. We focus on the ideal op-amp model, characterized by infinite input impedance, zero output impedance, and infinite open-loop gain. This abstraction simplifies the analysis of circuits containing op-amps.</p>
+                     <div class="video-container">
+                         <p class="video-title">Recommended MIT Lecture: The Operational Amplifier Abstraction</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/V0z_f7qxLcY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </section>
+                 <section id="unit11">
+                    <h2>Unit 11: Op-Amp Circuits</h2>
+                    <h3>Topic Description</h3>
+                    <p>Building on the ideal op-amp model, this unit covers fundamental op-amp circuit configurations, including the inverting amplifier, non-inverting amplifier, summer, and difference amplifier. We analyze how feedback networks determine the closed-loop gain and function of these circuits.</p>
+                     <div class="video-container">
+                         <p class="video-title">Recommended MIT Lecture: Operational Amplifier Circuits</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/2SwT6JnfCq8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </section>
+                <section id="unit12">
+                    <h2>Unit 12: Frequency Response & Bode Plots</h2>
+                     <h3>Topic Description</h3>
+                    <p>This unit explores how the behavior of circuits changes with the frequency of the input signal. We introduce the concept of the transfer function and use Bode plots to visualize the frequency response (magnitude and phase) of circuits, which is essential for designing filters and understanding system stability.</p>
+                     <div class="video-container">
+                         <p class="video-title">Recommended MIT Lecture: Filters</p>
+                         <iframe class="w-full aspect-video rounded-lg" src="https://www.youtube.com/embed/WT-qzgaKeGI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </section>
+
+            </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Render LaTeX formulas
+        if (window.renderMathInElement) {
+             renderMathInElement(document.body, {
+                delimiters: [ {left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false} ]
+            });
+        }
+       
+        // --- Mobile Menu ---
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        if(menuToggle && sidebar) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('-translate-x-full');
+            });
+        }
+
+        // --- Active Nav Link on Scroll (Scrollspy) ---
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll("nav a.nav-link");
+        const mainContent = document.querySelector("#main-content");
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove("font-semibold", "text-blue-600");
+                        link.classList.add("text-gray-700", "hover:font-semibold");
+                        if (link.getAttribute("href").substring(1) === entry.target.id) {
+                            link.classList.add("font-semibold", "text-blue-600");
+                            link.classList.remove("text-gray-700");
+                        }
+                    });
+                }
+            });
+        }, {
+            root: mainContent, 
+            rootMargin: "0px 0px -75% 0px" // Trigger when top 25% of section is visible
+        });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        // --- SIMULATOR SCRIPTS ---
+        // Ohm's Law Simulator
+        const voltSlider = document.getElementById('voltage');
+        const resSlider = document.getElementById('resistance');
+        if (voltSlider && resSlider) {
+            const voltVal = document.getElementById('voltVal');
+            const resVal = document.getElementById('resVal');
+            const currentDisplay = document.getElementById('currentDisplay');
+            
+            function updateOhmLaw() {
+                const V = parseFloat(voltSlider.value);
+                const R = parseFloat(resSlider.value);
+                const I = V / R;
+                voltVal.textContent = V;
+                resVal.textContent = R;
+                currentDisplay.textContent = (I * 1000).toFixed(1) + ' mA';
+            }
+            voltSlider.addEventListener('input', updateOhmLaw);
+            resSlider.addEventListener('input', updateOhmLaw);
+            updateOhmLaw();
+        }
+
+        // Voltage Divider Simulator
+        const vsSlider = document.getElementById('vs');
+        const r1Slider = document.getElementById('r1_div');
+        const r2Slider = document.getElementById('r2_div');
+        if (vsSlider && r1Slider && r2Slider) {
+            const vsVal = document.getElementById('vsVal');
+            const r1Val = document.getElementById('r1Val');
+            const r2Val = document.getElementById('r2Val');
+            const vr2Display = document.getElementById('vr2Display');
+
+            function updateDivider() {
+                const Vs = parseFloat(vsSlider.value);
+                const R1 = parseFloat(r1Slider.value);
+                const R2 = parseFloat(r2Slider.value);
+                const Vr2 = Vs * (R2 / (R1 + R2));
+                vsVal.textContent = Vs;
+                r1Val.textContent = R1;
+                r2Val.textContent = R2;
+                vr2Display.textContent = Vr2.toFixed(1) + ' V';
+            }
+            [vsSlider, r1Slider, r2Slider].forEach(s => s.addEventListener('input', updateDivider));
+            updateDivider();
+        }
+
+        // RC Circuit Simulator
+        const startRCBtn = document.getElementById('startRC');
+        if (startRCBtn) {
+            const rSlider = document.getElementById('rc_r');
+            const cSlider = document.getElementById('rc_c');
+            const rVal = document.getElementById('rc_r_val');
+            const cVal = document.getElementById('rc_c_val');
+            const tauDisplay = document.getElementById('rc_tau');
+            const rcCanvas = document.getElementById('rcCanvas');
+            const rcCtx = rcCanvas.getContext('2d');
+            let rcAnim;
+
+            function updateRCTau() {
+                const R = parseFloat(rSlider.value) * 1000; // kOhms
+                const C = parseFloat(cSlider.value) / 1000000; // uF
+                const tau = R * C;
+                rVal.textContent = rSlider.value;
+                cVal.textContent = cSlider.value;
+                tauDisplay.textContent = tau.toFixed(2);
+            }
+            
+            function runRCCharge() {
+                if (rcAnim) cancelAnimationFrame(rcAnim);
+                updateRCTau();
+                const R = parseFloat(rSlider.value) * 1000;
+                const C = parseFloat(cSlider.value) / 1000000;
+                const tau = R * C;
+                const Vs = 10; // Assume 10V source
+                const w = rcCanvas.width, h = rcCanvas.height;
+
+                let startTime = performance.now();
+                
+                function animate(time) {
+                    const t = (time - startTime) / 1000;
+                    const v_c = Vs * (1 - Math.exp(-t / tau));
+
+                    rcCtx.clearRect(0, 0, w, h);
+                    
+                    // Draw grid
+                    rcCtx.strokeStyle = '#e5e7eb';
+                    rcCtx.beginPath();
+                    for(let i=1; i<5; i++) {
+                       rcCtx.moveTo(i*w/5, 0); rcCtx.lineTo(i*w/5, h);
+                       rcCtx.moveTo(0, i*h/5); rcCtx.lineTo(w, i*h/5);
+                    }
+                    rcCtx.stroke();
+
+                    // Draw curve
+                    rcCtx.beginPath();
+                    rcCtx.moveTo(0, h);
+                    for (let plot_t = 0; plot_t <= t; plot_t += 0.01) {
+                        const plot_v = Vs * (1 - Math.exp(-plot_t / tau));
+                        const x = (plot_t / (5*tau)) * w; // Scale to 5 tau
+                        const y = h - (plot_v / Vs) * h;
+                        rcCtx.lineTo(x, y);
+                    }
+                    rcCtx.strokeStyle = '#ef4444';
+                    rcCtx.lineWidth = 2;
+                    rcCtx.stroke();
+                    
+                    if (t < 5 * tau) {
+                        rcAnim = requestAnimationFrame(animate);
+                    }
+                }
+                rcAnim = requestAnimationFrame(animate);
+            }
+
+            rSlider.addEventListener('input', updateRCTau);
+            cSlider.addEventListener('input', updateRCTau);
+            startRCBtn.addEventListener('click', runRCCharge);
+            updateRCTau();
+        }
+
+    });
+    </script>
+</body>
+</html>
