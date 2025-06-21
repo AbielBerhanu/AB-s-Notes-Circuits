@@ -71,7 +71,20 @@
         <aside id="sidebar" class="w-64 bg-white shadow-md flex-shrink-0 fixed lg:relative h-full z-20 transform -translate-x-full lg:translate-x-0 sidebar">
             <div class="p-6">
                 <h1 class="text-2xl font-bold text-gray-900">AB's Notes</h1>
-                <p class="text-sm text-gray-600">Circuits 1</p>
+                <div class="relative mt-2" id="course-switcher">
+                    <button id="course-switcher-button" class="flex items-center justify-between w-full px-3 py-2 text-left text-sm font-medium text-gray-700 bg-gray-50 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span>Circuits 1</span>
+                        <svg id="course-switcher-icon" class="w-5 h-5 ml-2 -mr-1 text-gray-400 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                    <div id="course-switcher-menu" class="absolute right-0 w-full mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden z-10">
+                        <div class="py-1">
+                            <a href="https://abielberhanu.github.io/AB-s-Notes/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Physics I: Classical Mechanics</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Physics 2</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <nav class="mt-4 px-4">
                  <ul>
@@ -369,6 +382,26 @@
                 sidebar.classList.toggle('-translate-x-full');
             });
         }
+        
+        // --- Course Switcher Dropdown ---
+        const switcherButton = document.getElementById('course-switcher-button');
+        const switcherMenu = document.getElementById('course-switcher-menu');
+        const switcherIcon = document.getElementById('course-switcher-icon');
+        if (switcherButton) {
+            switcherButton.addEventListener('click', (event) => {
+                event.stopPropagation();
+                const isHidden = switcherMenu.classList.toggle('hidden');
+                switcherIcon.classList.toggle('rotate-180', !isHidden);
+            });
+        }
+        document.addEventListener('click', (event) => {
+            const switcher = document.getElementById('course-switcher');
+            if (switcher && !switcher.contains(event.target)) {
+                switcherMenu.classList.add('hidden');
+                switcherIcon.classList.remove('rotate-180');
+            }
+        });
+
 
         // --- Active Nav Link on Scroll (Scrollspy) ---
         const sections = document.querySelectorAll("section");
@@ -390,7 +423,7 @@
             });
         }, {
             root: mainContent, 
-            rootMargin: "0px 0px -75% 0px" // Trigger when top 25% of section is visible
+            rootMargin: "0px 0px -75% 0px" 
         });
 
         sections.forEach(section => {
@@ -477,8 +510,7 @@
                 
                 function animate(time) {
                     const t = (time - startTime) / 1000;
-                    const v_c = Vs * (1 - Math.exp(-t / tau));
-
+                    
                     rcCtx.clearRect(0, 0, w, h);
                     
                     // Draw grid
@@ -493,7 +525,7 @@
                     // Draw curve
                     rcCtx.beginPath();
                     rcCtx.moveTo(0, h);
-                    for (let plot_t = 0; plot_t <= t; plot_t += 0.01) {
+                    for (let plot_t = 0; plot_t <= 5*tau; plot_t += (5*tau)/w) { // plot across the full width
                         const plot_v = Vs * (1 - Math.exp(-plot_t / tau));
                         const x = (plot_t / (5*tau)) * w; // Scale to 5 tau
                         const y = h - (plot_v / Vs) * h;
@@ -503,7 +535,15 @@
                     rcCtx.lineWidth = 2;
                     rcCtx.stroke();
                     
+                    // Draw current point
                     if (t < 5 * tau) {
+                        const v_c = Vs * (1 - Math.exp(-t / tau));
+                        const current_x = (t / (5*tau)) * w;
+                        const current_y = h - (v_c/Vs)*h;
+                        rcCtx.beginPath();
+                        rcCtx.arc(current_x, current_y, 5, 0, 2*Math.PI);
+                        rcCtx.fillStyle = "blue";
+                        rcCtx.fill();
                         rcAnim = requestAnimationFrame(animate);
                     }
                 }
